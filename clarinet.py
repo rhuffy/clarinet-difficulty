@@ -78,21 +78,25 @@ class Clarinet:
             return lfp
 
         def end_sequence(seq_a, seq_b):
-            if len(seq_a) > 0 and seq_a[-1][1] != LFP.fail:
+            if len(seq_a) == len(seq_b) and(len(seq_a) == 0 or (seq_a[-1][1] != LFP.fail and seq_b[-1][1] != LFP.fail)):
+                return
+            elif len(seq_a) > 0 and seq_a[-1][1] != LFP.fail:
                 for n, lfp in seq_a:
                     if lfp == LFP.left:
                         n.lyric = 'L'
                     elif lfp == LFP.right:
                         n.lyric = 'R'
                     elif lfp == LFP.fail:
+                        n.lyric = 'X'
                         n.style.color = 'red'
             elif len(seq_b) > 0 and seq_b[-1][1] != LFP.fail:
-                for n, lfp in seq_a:
+                for n, lfp in seq_b:
                     if lfp == LFP.left:
                         n.lyric = 'L'
                     elif lfp == LFP.right:
                         n.lyric = 'R'
                     elif lfp == LFP.fail:
+                        n.lyric = 'X'
                         n.style.color = 'red'
             else:
                 longest_seq = seq_a if len(seq_a) > len(seq_b) else seq_b
@@ -104,6 +108,7 @@ class Clarinet:
                         n.lyric = 'R'
                         n.style.color = 'red'
                     elif lfp == LFP.fail:
+                        n.lyric = 'X'
                         n.style.color = 'red'
 
         sequence_start_left = []
