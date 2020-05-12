@@ -1,4 +1,4 @@
-from music21 import *
+from music21 import converter
 from clarinet import Clarinet
 
 if __name__ == "__main__":
@@ -23,5 +23,4 @@ if __name__ == "__main__":
     clarinet = Clarinet()
 
     clarinet.label_little_finger_gymnastics(s)
-    n = note.Note('E-5')
     s.show()

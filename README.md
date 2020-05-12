@@ -2,6 +2,22 @@
 
 ## Usage
 
+Requires [music21](https://web.mit.edu/music21/)
+`pip install music21`
+
+clarinet-difficulty can be used on any music21 stream
+
+```python
+from music21 import converter
+from clarinet import Clarinet
+ 
+s = converter.parse('./your_file.musicxml')
+clarinet = Clarinet()
+
+clarinet.label_little_finger_gymnastics(s)
+s.show()
+```
+
 ## Introduction
 The clarinet is a popular instrument in western music, found commonly in wind ensembles and symphony orchestras. When composing a work for any large modern ensemble, the composer is almost guaranteed to include a part for clarinet. However, the clarinet has a few structural and mechanical limitations that make certain types of phrases unexpectedly difficult to perform. While clarinetists are aware of these limitations, composers without experience on the instrument might not be aware and may include phrases in their work that are very difficult to perform properly.
 
