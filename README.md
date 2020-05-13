@@ -3,6 +3,7 @@
 ## Usage
 
 Requires [music21](https://web.mit.edu/music21/)
+
 `pip install music21`
 
 clarinet-difficulty can be used on any music21 stream
@@ -15,6 +16,9 @@ s = converter.parse('./your_file.musicxml')
 clarinet = Clarinet()
 
 clarinet.label_little_finger_gymnastics(s)
+clarinet.label_little_finger_gymnastics(s)
+clarinet.label_break_jumping(s)
+clarinet.label_range(s)
 s.show()
 ```
 

@@ -16,10 +16,10 @@ class Clarinet:
         self.minimum_pitch = pitch.Pitch(minimum_pitch)
         self.maximum_pitch = pitch.Pitch(maximum_pitch)
 
-    def check_note_in_range(self, n: note.Note) -> bool:
+    def _check_note_in_range(self, n: note.Note) -> bool:
         return self.minimum_pitch <= n.pitch <= self.maximum_pitch
 
-    def get_register(self, n: note.Note) -> ClarinetRegister:
+    def _get_register(self, n: note.Note) -> ClarinetRegister:
         if n.pitch <= pitch.Pitch('E4'):
             return ClarinetRegister.chalumeau
         if n.pitch <= pitch.Pitch('A#4'):
@@ -29,7 +29,7 @@ class Clarinet:
         else:
             return ClarinetRegister.altissimo
 
-    def normalize_to_clarion(self, n: note.Note):
+    def _normalize_to_clarion(self, n: note.Note):
         '''
         If a note is in the lower Chalumeau register,
         converts to the note with the same fingering
@@ -39,7 +39,7 @@ class Clarinet:
         if isinstance(n, note.Rest):
             return n
 
-        if self.get_register(n) != ClarinetRegister.chalumeau:
+        if self._get_register(n) != ClarinetRegister.chalumeau:
             return n
 
         return note.Note(n.pitch.ps + 19)
@@ -51,10 +51,10 @@ class Clarinet:
         '''
         n: note.Note
         for n in s.recurse().getElementsByClass('Note'):
-            if not self.check_note_in_range(n):
+            if not self._check_note_in_range(n):
                 n.style.color = 'red'
 
-            if self.get_register(n) == ClarinetRegister.altissimo:
+            if self._get_register(n) == ClarinetRegister.altissimo:
                 n.style.color = 'yellow'
 
     def label_break_jumping(self, s: stream.Stream, threshold=4):
@@ -66,7 +66,7 @@ class Clarinet:
         last_register = None
         n: note.Note
         for n in s.recurse().getElementsByClass('Note'):
-            current_register = self.get_register(n)
+            current_register = self._get_register(n)
 
             if len(current_sequence) > threshold:
                 for n in current_sequence:
