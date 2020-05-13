@@ -55,3 +55,9 @@ Consider a sequence [B, C, D#]. If B is played on the left and C is played on th
 Now consider a sequence [D#, B, C, D#]. It is impossible to assign alternating side key fingerings here as the first D# must be played on the right, making the only option D#-R, B-L, C-R, D#-L - which is impossible.
 
 (In this situation, one is able to slide their left pinky from B to C, making a sequence D#-R, B-L, C-L, D#-R possible for skilled clarinetists)
+
+## Implementation Notes
+
+Instances of little finger gymnastics are detected by iterating through all notes in a stream, keeping running lists of notes that require the use of the pinky finger. Two running lists are kept, one that assumes the first note is played on the left side, and another assuming the right side. The elements of the list are tuples of type (note.Note, 'L' | 'R'). If a sequence is encountered that is not possible, that list is marked as containing a _fail_. These lists are kept until a rest is encountered, if same note is played twice, or a note that does not require a pinky key is encountered. 
+
+The lists are then compared to see which gives a better left - right labeling. Sequences are preferred if they have no failures and are the longest. Labels are added using note lyrics and color.
