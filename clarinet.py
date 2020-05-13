@@ -46,14 +46,41 @@ class Clarinet:
 
     def label_range(self, s: stream.Stream):
         '''
-        Given a stream, labels notes that are difficult or impossible to play.
+        Given a stream, labels notes with pitches
+        that are difficult or impossible to play.
         '''
+        n: note.Note
         for n in s.getElementsByClass('Note'):
             if not self.check_note_in_range(n):
                 n.style.color = 'red'
 
             if self.get_register(n) == ClarinetRegister.altissimo:
                 n.style.color = 'yellow'
+
+    def label_break_jumping(self, s: stream.Stream, threshold=4):
+        '''
+        Given a stream, labels sequences of notes with
+        repeated break jumping.
+        '''
+        current_sequence: List[note.Note] = []
+        last_register = None
+        n: note.Note
+        for n in s.getElementsByClass('Note'):
+            current_register = self.get_register(n)
+
+            if last_register != current_register:
+                current_sequence = []
+                last_register = current_register
+                continue
+
+            current_sequence.append(current_register)
+
+            if len(current_sequence > threshold):
+                for n in current_sequence:
+                    n.style.color = 'red'
+                    current_sequence = []
+
+            last_register = current_register
 
     def label_little_finger_gymnastics(self, s: stream.Stream):
         '''
@@ -128,8 +155,9 @@ class Clarinet:
         for i, n in enumerate(notes):
 
             if isinstance(n, note.Rest) or \
-                (isinstance(notes[i-1], note.Note) and n.pitch.ps == notes[i-1].pitch.ps) \
-                    or n.pitch.ps not in requires_little_finger:
+               (isinstance(notes[i-1], note.Note)
+                and n.pitch.ps == notes[i-1].pitch.ps) \
+               or n.pitch.ps not in requires_little_finger:
                 end_sequence(sequence_start_left, sequence_start_right)
                 sequence_start_left = []
                 sequence_start_right = []
