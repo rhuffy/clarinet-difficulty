@@ -44,7 +44,18 @@ class Clarinet:
 
         return note.Note(n.pitch.ps + 19)
 
-    def label_little_finger_gymnastics(self, s: stream.Stream) -> List[int]:
+    def label_range(self, s: stream.Stream):
+        '''
+        Given a stream, labels notes that are difficult or impossible to play.
+        '''
+        for n in s.getElementsByClass('Note'):
+            if not self.check_note_in_range(n):
+                n.style.color = 'red'
+
+            if self.get_register(n) == ClarinetRegister.altissimo:
+                n.style.color = 'yellow'
+
+    def label_little_finger_gymnastics(self, s: stream.Stream):
         '''
         Returns positions of notes in a stream containing a sequence of notes
         that is difficult to finger on the clarinet.
