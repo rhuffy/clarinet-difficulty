@@ -33,12 +33,21 @@ Here, I demonstrate how Music21 can be used to detect and mark up difficult pass
 ## Difficult Idioms
 
 ### Break Jumping
+
+`clarinet.label_break_jumping(s: stream.Stream)`
+
 The register key on the clarinet is not as responsive as normal keys and tone holes, so frequent and rapid jumps between registers are difficult to perform.
 
 ### Altissimo Register
+
+`clarinet.label_range(s: stream.Stream)`
+
 Notes above C6 are more difficult to play in tune, especially for less experienced clarinetists. Composers should consider avoiding notes in this register for music meant for younger players. Notes above G6 are very difficult to play, even for experienced clarinetists. Composers should avoid using these notes.
 
 ### Little Finger Gymnastics
+
+`clarinet.label_little_finger_gymnastics(s: stream.Stream)`
+
 On the standard clarinet, there are four keys operated by the left pinky and four keys operated by the right pinky. The left side keys are used for the pitches [B, C, C#, G#] and the right side keys are used for the pitches [B, C, C#, D#]. When playing a sequence of notes requiring these pinky keys, the clarinetist must alternate between their left and right side keys to ensure that note transitions are smooth. While there exists an alternate fingering for G# that does not use the pinky keys, D# can only be played using the right pinky. This introduces a constraint that requires a clarinetist to plan which keys to use in advance in a sequence of notes of the set [B, C, C#, D#].
 
 Consider a sequence [B, C, D#]. If B is played on the left and C is played on the right, the clarinetist cannot transition smoothly to a D# as their right pinky is already in use, and there is no way to play D# using their left pinky. One must preemptively play the B on the right side so that the right side will be available to play D#.
