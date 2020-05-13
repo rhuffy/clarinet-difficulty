@@ -18,9 +18,11 @@ if __name__ == "__main__":
     # s = stream.Stream()
     # s.append([note.Note(n) for n in impossible2])
 
-    s = converter.parse('../Four_Scottish_Dances.musicxml')
+    s = converter.parse('./examples.musicxml')
 
     clarinet = Clarinet()
 
     clarinet.label_little_finger_gymnastics(s)
+    clarinet.label_break_jumping(s)
+    clarinet.label_range(s)
     s.show()

@@ -50,7 +50,7 @@ class Clarinet:
         that are difficult or impossible to play.
         '''
         n: note.Note
-        for n in s.getElementsByClass('Note'):
+        for n in s.recurse().getElementsByClass('Note'):
             if not self.check_note_in_range(n):
                 n.style.color = 'red'
 
@@ -65,20 +65,20 @@ class Clarinet:
         current_sequence: List[note.Note] = []
         last_register = None
         n: note.Note
-        for n in s.getElementsByClass('Note'):
+        for n in s.recurse().getElementsByClass('Note'):
             current_register = self.get_register(n)
 
-            if last_register != current_register:
+            if len(current_sequence) > threshold:
+                for n in current_sequence:
+                    n.style.color = 'red'
+                    current_sequence = []
+
+            elif last_register == current_register:
                 current_sequence = []
                 last_register = current_register
                 continue
 
-            current_sequence.append(current_register)
-
-            if len(current_sequence > threshold):
-                for n in current_sequence:
-                    n.style.color = 'red'
-                    current_sequence = []
+            current_sequence.append(n)
 
             last_register = current_register
 
@@ -99,14 +99,15 @@ class Clarinet:
             fail = 'fail'
 
         requires_little_finger: Set[int] = {note.Note(s).pitch.ps for s in [
-            'B4', 'C5', 'C#5', 'D#5']}
+            'B4', 'C5', 'C#5', 'D#5', 'E3', 'F3', 'F#3', 'G#3']}
         right_side = requires_little_finger
-        left_side = {note.Note(s).pitch.ps for s in ['B4', 'C5', 'C#5']}
+        left_side = {note.Note(s).pitch.ps for s in [
+            'B4', 'C5', 'C#5', 'E3', 'F3', 'F#3']}
 
-        eflat_ps = note.Note('E-5').pitch.ps
+        eflat_ps = set([note.Note('E-5').pitch.ps, note.Note('G#3').pitch.ps])
 
         notes: List[note.Note] = [
-            self.normalize_to_clarion(n) for n in s.recurse().getElementsByClass(['Note', 'Rest'])]
+            n for n in s.recurse().getElementsByClass(['Note', 'Rest'])]
 
         def run_assignment(lfp: LFP, n: note.Note):
             if lfp == LFP.left:
@@ -164,7 +165,7 @@ class Clarinet:
                 continue
 
             if len(sequence_start_left) == 0:
-                if n.pitch.ps == eflat_ps:
+                if n.pitch.ps in eflat_ps:
                     sequence_start_left.append((n, LFP.fail))
                     sequence_start_right.append((n, LFP.right))
                 else:
@@ -172,7 +173,7 @@ class Clarinet:
                     sequence_start_right.append((n, LFP.right))
                 continue
 
-            if n.pitch.ps == eflat_ps:
+            if n.pitch.ps in eflat_ps:
                 if sequence_start_left[-1][1] == LFP.left:
                     sequence_start_left.append((n, LFP.right))
                 else:
@@ -190,24 +191,3 @@ class Clarinet:
                 if sequence_start_right[-1][1] != LFP.fail:
                     sequence_start_right.append(
                         (n, LFP.left if sequence_start_right[-1][1] == LFP.right else LFP.right))
-
-            # if n.pitch.ps not in requires_little_finger:
-            #     start_left_lfp = LFP.up
-            #     start_right_lfp = LFP.up
-            #     continue
-
-            # if start_left_lfp == LFP.up or start_right_lfp == LFP.up:
-            #     start_left_lfp = LFP.left if n.pitch.ps in left_side else LFP.fail
-            #     start_right_lfp = LFP.right if n.pitch.ps in right_side else LFP.fail
-            #     continue
-
-            # if start_left_lfp != LFP.fail:
-            #     start_left_lfp = run_assignment(start_left_lfp, n)
-
-            # if start_right_lfp != LFP.fail:
-            #     start_right_lfp = run_assignment(start_left_lfp, n)
-
-            # if start_left_lfp == LFP.fail and start_right_lfp == LFP.fail:
-            #     n.style.color = 'red'
-
-        # print(start_left_lfp, start_right_lfp)
